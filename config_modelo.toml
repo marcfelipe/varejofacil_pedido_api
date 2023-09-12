@@ -1,0 +1,5 @@
+nome_servidor = "localhost"
+local_banco = "c:/syspdv/syspdv_srv.fdb"
+url_cliente = "https://linkdocliente.varejofacil.com"
+client_user = "pedido_api"
+client_pwd = "123456"
