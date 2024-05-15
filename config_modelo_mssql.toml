@@ -1,0 +1,7 @@
+nome_servidor = "localhost"
+local_banco = "syspdv"
+url_cliente = "https://yanconorte.varejofacil.com"
+client_user = "pedido_api"
+client_pwd = "6789ab"
+sgbd = "MSSQL"
+bd_pwd = "rfxyjwpj3"
