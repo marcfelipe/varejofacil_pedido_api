@@ -5,9 +5,17 @@ from utils.common_functions import list_to_string
 class PedidoVendaDAO(object):
     def __index__(self):
         pass
+    def __init__(self, sgbd, user = 'SYSDBA', password = 'masterkey') -> None:
+        self.sgbd = sgbd
+        self.user = user
+        self.password = password
 
     def listar_pedido_bd(self, numero_pedido, servidor='localhost', local_bd='c:/syspdv/syspdv_srv.fdb'):
-        con = db.conectar_db(servidor, local_bd)
+        if self.sgbd == 'MSSQL':
+            con = db.conectar_db_sql(servidor, local_bd, self.user, self.password)
+        else:
+            con = db.conectar_db(servidor, local_bd)
+        print('BD EM USO:', self.sgbd)
         sql_ = """select PVDNUM, FUNCOD,CLICOD,TRNSEQ,TRNCXA,PVDTIPPRC,PVDDATEMI,PVDHOREMI,
         PVDDATFEC,PVDHORFEC,PVDSTATUS,
         PVDDOCIMP,PVDVLR,PVDDCN,PVDACR,PVDBLODCN,PVDBLOEST,PVDBLOLIMCRD,PVDFUNAUT,PVDCLIDES,PVDCLIEND,PVDCLIBAI,
@@ -23,7 +31,10 @@ class PedidoVendaDAO(object):
         return rs
 
     def listar_itens_pedido_bd(self, numero_pedido, servidor='localhost', local_bd='c:/syspdv/syspdv_srv.fdb'):
-        con = db.conectar_db(servidor, local_bd)
+        if self.sgbd == 'MSSQL':
+            con = db.conectar_db_sql(servidor, local_bd, self.user, self.password)
+        else:
+            con = db.conectar_db(servidor, local_bd)
         sql = """select
         ID,PVISEQ,PVDNUM,pedido_venda_item.PROCOD,PVIQTD,PVIVLRUNI,PVIVLRDCN,PVITIPDCN,PVIVLRACR,PVITIPACR,PVISERPRO,
         PVIOBS,PVITRBID,PVIALQICMS,PVIITEEMB,PVIUNID,PVIPRODES,PVIPRODESDZ, produto.PROUNID,PVIPROCODAUX,PVIFUNCOD,
@@ -40,7 +51,10 @@ class PedidoVendaDAO(object):
 
     def atualizar_status_pedido_bd(self, numero_pedido, status_pedido,servidor='localhost',
                                    local_bd='c:/syspdv/syspdv_srv.fdb'):
-        con = db.conectar_db(servidor, local_bd)
+        if self.sgbd == 'MSSQL':
+            con = db.conectar_db_sql(servidor, local_bd, self.user, self.password)
+        else:
+            con = db.conectar_db(servidor, local_bd)
         sql = """update pedido_venda set pvdstatus = ?
               where pvdnum = ?
         """
@@ -49,7 +63,10 @@ class PedidoVendaDAO(object):
         cursor.execute(sql, [status_pedido,numero_pedido])
 
     def listar_pre_finalizacao_pedido_bd(self, numero_pedido, servidor='localhost', local_bd='c:/syspdv/syspdv_srv.fdb'):
-        con = db.conectar_db(servidor, local_bd)
+        if self.sgbd == 'MSSQL':
+            con = db.conectar_db_sql(servidor, local_bd, self.user, self.password)
+        else:
+            con = db.conectar_db(servidor, local_bd)
         sql_ = """select pvdnum, fzdcod, prefzpvdvlr, prefzpvdtroco
         from prefnzpedidovenda
         where pvdnum = ?

@@ -1,3 +1,10 @@
 config.toml
 venv
 *.txt
+build
+dist
+__pycache__
+app_envio.spec
+config_backup.toml
+criptografia.py
+k312

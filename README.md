@@ -5,3 +5,7 @@ Exemplo de uso da API do sistema varejofacil para envio de pedidos, com a possib
  - Renomeie arquivo config_modelo.toml para config.toml
  - Preencha com os dados corretos da sua conexão e seu banco (firebird apenas)
  - instale os packages presentes no requirements.txt
+
+
+Para executar, apenas execute:
+python app_envio.py

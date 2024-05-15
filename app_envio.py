@@ -5,6 +5,7 @@ from utils.common_functions import valida_none
 import datetime
 import pprint
 import tomli
+import criptografia
 
 with open("config.toml", mode="rb") as fp:
     config = tomli.load(fp)
@@ -12,16 +13,20 @@ with open("config.toml", mode="rb") as fp:
 nome_servidor = config['nome_servidor']
 local_banco = config['local_banco']
 url_cliente = config['url_cliente']
-client = Client(url_cliente, config['client_user'], config['client_pwd'])
-
+sgbd = config['sgbd']
+bd_pwd = criptografia.decrypt(5, config['bd_pwd'])
+link_pwd = criptografia.decrypt(5, config['client_pwd'])
+#print(bd_pwd)
+client = Client(url_cliente, config['client_user'], link_pwd)
 client.get_token_API()
 
 numero_pedido = input('Digite o número do pedido (digitar -1 encerra sem envio):\n')
 
 while(int(numero_pedido)!= -1):
     arq_log = open('log_envio_pedidos.txt', 'w')
-    pedido_dao = PedidoVendaDAO()
+    pedido_dao = PedidoVendaDAO(sgbd, 'sa', bd_pwd)
     pedido_bd = pedido_dao.listar_pedido_bd(numero_pedido, nome_servidor, local_banco)
+    print(pedido_bd)
     if pedido_bd is not None and len(pedido_bd)>0:
         lista_itens_envio = []
         pagamentos = []
@@ -102,6 +107,7 @@ while(int(numero_pedido)!= -1):
         enderecoEntrega = endereco_entrega      #facilitar a inicialização do objeto
         itens = lista_itens_envio               #facilitar a inicialização do objeto
         print('TIPO DE FATURAMENTO: ', tipoFaturamento)
+        id_externo = f'SYSPDV{numero_pedido.zfill(10)}'
         obj_pedido_envio = Pedido(numero_pedido, numero_pedido, lojaId, dataEmissao, dataFaturamento, dataEntrega,
                                   dataPrevisao, clienteId, vendedorId, pessoaAutorizadaRecebimento, retiradaNaLoja,
                                   cpfNoCupom, observacao, valorTotal, valorLiquido, status, tipoDeFrete,
